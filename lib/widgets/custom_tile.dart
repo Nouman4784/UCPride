@@ -8,6 +8,7 @@ class CustomTile extends StatelessWidget {
   final String? departureLocation;
   final String? madeOfTransportation;
   final String? noOfSeats;
+  final String? licenseNo;
   final Color? titleColor;
   final Color? subTitleColor;
   final double? verticalpadding;
@@ -28,7 +29,8 @@ class CustomTile extends StatelessWidget {
       this.verticalpadding,
       this.horizontalpadding,
       this.madeOfTransportation,
-      this.noOfSeats})
+      this.noOfSeats,
+      this.licenseNo})
       : super(key: key);
 
   @override
@@ -81,6 +83,12 @@ class CustomTile extends StatelessWidget {
                                     color: subTitleColor ?? Colors.black),
                               ),
                               Text(
+                                licenseNo!,
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: subTitleColor ?? Colors.black),
+                              ),
+                              Text(
                                 noOfSeats!,
                                 style: TextStyle(
                                     fontSize: 17,
@@ -93,7 +101,13 @@ class CustomTile extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  const Icon(Icons.arrow_forward)
+                  Column(
+                    children: const [
+                      Icon(Icons.arrow_forward),
+                      Text('Distance'),
+                      Text('7.3Kms.')
+                    ],
+                  )
                 ],
               ),
             ),

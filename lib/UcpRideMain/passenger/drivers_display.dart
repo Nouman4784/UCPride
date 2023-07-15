@@ -34,10 +34,12 @@ class _DriversDisplayState extends State<DriversDisplay> {
           customTilesData = data.map<Map<String, String>>((item) {
             return {
               '_id': item['_id'],
-              'title': 'Arrival Location: ${item['departureLocation'] ?? ''}',
+              'title': 'Departure Location: ${item['departureLocation'] ?? ''}',
               'arrivalTime': 'Time: ${item['date'] ?? ''}',
-              'departureLocation': 'Area: ${item['departureLocation'] ?? ''}',
+              'departureLocation':
+                  'Arrival Location: ${item['arrivalLocation'] ?? ''}',
               'madeOfTransportation': 'Vehicle: ${item['vehicleType'] ?? ''}',
+              'licenseNo': 'LicenseNo : ${item['licenseNo'] ?? ''}',
               'noOfSeats': 'No Of Seats: ${item['noOfSeats'] ?? ''}',
             };
           }).toList();
@@ -118,16 +120,19 @@ class _DriversDisplayState extends State<DriversDisplay> {
                     height: 10,
                   ),
                   isLoading
-                      ? const CircularProgressIndicator() // Show loader while fetching data
+                      ? const CircularProgressIndicator()
                       : Column(
-                          children: customTilesData
-                              .map(
-                                (data) => CustomTile(
+                          children: customTilesData.map(
+                            (data) {
+                              final driverId = data['_id'];
+                              if (driverId != null) {
+                                return CustomTile(
                                   title: data['title']!,
-                                  arrivalTime: data['arrivalTime']!,
                                   departureLocation: data['departureLocation']!,
+                                  arrivalTime: data['arrivalTime']!,
                                   madeOfTransportation:
                                       data['madeOfTransportation']!,
+                                  licenseNo: data['licenseNo']!,
                                   noOfSeats: data['noOfSeats']!,
                                   onPressed: () {
                                     Navigator.push(
@@ -138,9 +143,12 @@ class _DriversDisplayState extends State<DriversDisplay> {
                                       ),
                                     );
                                   },
-                                ),
-                              )
-                              .toList(),
+                                );
+                              } else {
+                                return Container(); // or any other placeholder widget
+                              }
+                            },
+                          ).toList(),
                         ),
                 ],
               ),

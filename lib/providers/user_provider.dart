@@ -8,3 +8,12 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class DriverIdProvider extends ChangeNotifier {
+  String? driverId;
+
+  void setDriverId(String id) {
+    driverId = id;
+    notifyListeners();
+  }
+}

@@ -17,20 +17,24 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   TextEditingController departureLocationController = TextEditingController();
+  TextEditingController arrivalLocationController = TextEditingController();
   TextEditingController vehicleTypeController = TextEditingController();
+  TextEditingController lisenceNoController = TextEditingController();
   TextEditingController noOfSeatsController = TextEditingController();
   bool isLoading = false; // Track loading state
 
-  Future<void> addDriver(String departureLocation, String vehicleType,
-      int noOfSeats, String userId) async {
+  Future<void> addDriver(String arrivalLocation, String departureLocation,
+      String vehicleType, int lisenceNo, int noOfSeats, String userId) async {
     setState(() {
       isLoading = true; // Set loading state to true
     });
 
     var url = Uri.parse('https://ucp-ride.onrender.com/api/drivers/driver');
     var body = jsonEncode({
+      'arrivalLocation': arrivalLocation,
       'departureLocation': departureLocation,
       'vehicleType': vehicleType,
+      'licenseNo': lisenceNo,
       'noOfSeats': noOfSeats,
       'userId': userId,
     });
@@ -77,6 +81,8 @@ class _UserFormState extends State<UserForm> {
         },
       );
     } else {
+      // ignore: avoid_print
+      print(response.body);
       // Adding driver failed
       showDialog(
         context: context,
@@ -191,9 +197,32 @@ class _UserFormState extends State<UserForm> {
                       height: 8,
                     ),
                     TextField(
-                      controller: departureLocationController,
+                      controller: arrivalLocationController,
                       decoration: const InputDecoration(
                         hintText: 'Enter arrival location',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Departure location',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextField(
+                      controller: departureLocationController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter departure location',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -217,6 +246,30 @@ class _UserFormState extends State<UserForm> {
                       controller: vehicleTypeController,
                       decoration: const InputDecoration(
                         hintText: 'Bike or Car',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Lisence No',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextField(
+                      controller: lisenceNoController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your lisence number',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -260,17 +313,21 @@ class _UserFormState extends State<UserForm> {
                         style: TextStyle(fontSize: 18),
                       ),
                       onPressed: () {
+                        String arrivalLocation = arrivalLocationController.text;
                         String departureLocation =
                             departureLocationController.text;
                         String vehicleType = vehicleTypeController.text;
                         int noOfSeats = int.parse(noOfSeatsController.text);
+                        int lisenceNo = int.parse(lisenceNoController.text);
                         String? userId =
                             Provider.of<UserProvider>(context, listen: false)
                                 .userId;
 
                         addDriver(
+                          arrivalLocation,
                           departureLocation,
                           vehicleType,
+                          lisenceNo,
                           noOfSeats,
                           userId!,
                         );

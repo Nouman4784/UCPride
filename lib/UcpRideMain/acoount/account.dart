@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:usama/Authentication/login.dart';
+import 'package:usama/UcpRideMain/acoount/user_profile.dart';
 import 'package:usama/config/appcolors.dart';
+import 'package:usama/providers/user_provider.dart';
 import 'package:usama/widgets/custom_tile_acc.dart';
+// ignore: depend_on_referenced_packages
+import 'package:provider/provider.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -49,9 +53,20 @@ class _DriversDisplayState extends State<Account> {
                 const SizedBox(
                   height: 20,
                 ),
-                const CustomTileAccount(
+                CustomTileAccount(
                   title: 'My Profile',
-                  subTitle: 'Usama',
+                  subTitle: 'View your profile ',
+                  onPressed: () {
+                    final userId =
+                        Provider.of<UserProvider>(context, listen: false)
+                            .userId;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserProfileView(userId: userId!),
+                      ),
+                    );
+                  },
                 ),
                 const CustomTileAccount(
                   title: 'Settings',
