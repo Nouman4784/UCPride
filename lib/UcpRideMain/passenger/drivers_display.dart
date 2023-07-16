@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:usama/UcpRideMain/passenger/chat_screen.dart';
 import 'package:usama/UcpRideMain/passenger/confirmation.dart';
 import 'package:usama/config/appcolors.dart';
+import 'package:usama/widgets/custom_button.dart';
 import 'package:usama/widgets/custom_tile.dart';
 
 class DriversDisplay extends StatefulWidget {
@@ -16,11 +17,13 @@ class DriversDisplay extends StatefulWidget {
 class _DriversDisplayState extends State<DriversDisplay> {
   List<Map<String, String>> customTilesData = [];
   bool isLoading = true;
+  // late DriverDetailsPopup _driverDetailsPopup; // Declare the variable
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    // _driverDetailsPopup = DriverDetailsPopup(); // Initialize the variable
   }
 
   Future<void> fetchData() async {
@@ -135,12 +138,43 @@ class _DriversDisplayState extends State<DriversDisplay> {
                                   licenseNo: data['licenseNo']!,
                                   noOfSeats: data['noOfSeats']!,
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ConfirmationScreen(),
-                                      ),
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(data['title']!),
+                                          content: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(data['departureLocation']!),
+                                              Text(data[
+                                                  'madeOfTransportation']!),
+                                              Text(data['licenseNo']!),
+                                              Text(data['noOfSeats']!),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              CustomButton(
+                                                buttonName: 'Start a chat',
+                                                height: 50,
+                                                width: 190,
+                                                color: AppColor.pri1maryColor,
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const ChatScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
                                 );
@@ -159,3 +193,64 @@ class _DriversDisplayState extends State<DriversDisplay> {
     );
   }
 }
+
+// class DriverDetailsPopup extends StatefulWidget {
+//   const DriverDetailsPopup({Key? key}) : super(key: key);
+
+//   @override
+//   _DriverDetailsPopupState createState() => _DriverDetailsPopupState();
+// }
+
+// class _DriverDetailsPopupState extends State<DriverDetailsPopup> {
+//   Map<String, String>? driverDetails;
+//   bool _isPopupVisible = false;
+
+//   void showPopup(Map<String, String> data) {
+//     setState(() {
+//       driverDetails = data;
+//       _isPopupVisible = true;
+//     });
+//   }
+
+//   void hidePopup() {
+//     setState(() {
+//       _isPopupVisible = false;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (!_isPopupVisible) {
+//       return Container();
+//     }
+
+//     return Stack(
+//       children: [
+//         Container(
+//           color: Colors.black54,
+//         ),
+//         Dialog(
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               ListTile(
+//                 title: Text(driverDetails!['title']!),
+//                 subtitle: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(driverDetails!['departureLocation']!),
+//                     Text(driverDetails!['arrivalTime']!),
+//                     Text(driverDetails!['madeOfTransportation']!),
+//                     Text(driverDetails!['licenseNo']!),
+//                     Text(driverDetails!['noOfSeats']!),
+//                   ],
+//                 ),
+//               ),
+              
+//             ],
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
